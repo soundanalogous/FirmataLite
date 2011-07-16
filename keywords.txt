@@ -1,0 +1,37 @@
+#######################################
+# Syntax Coloring Map For FirmataLite
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+FirmataLite	KEYWORD1
+systemResetCallbackFunction	KEYWORD1
+stringCallbackFunction	KEYWORD1
+sysexCallbackFunction	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+begin	KEYWORD2
+available	KEYWORD2
+processInput	KEYWORD2
+sendString	KEYWORD2
+sendSysex	KEYWORD2
+attach	KEYWORD2
+detach	KEYWORD2
+flush	KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MAX_DATA_BYTES	LITERAL1
+SYSTEM_RESET	LITERAL1
+START_SYSEX	LITERAL1
+END_SYSEX	LITERAL1
+
