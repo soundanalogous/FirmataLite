@@ -2,7 +2,7 @@ FirmataLite is a simplified version of Firmata by Hans-Christoph Steiner. Everyt
 
 This library is to be used as a serial protocol rather than a standalone sketch. The idea is to define interfaces for various components and sensors such as button, accelerometer, etc on both the SW app (running on PC/laptop) and Arduino and to pass the data in a SysEx packet (see SysEx proposal: http://firmata.org/wiki/Proposals#SysEx).
 
-For example, it's better to debug a button on the arduino side rather than the PC. So in arduino, you could crate a Button base object that includes actions such as press, release, etc. Read the button, then send the state to the PC app upon change.
+For example, it's better to debounce a button on the arduino side rather than the PC. So in arduino, you could create a Button base object that includes actions such as press, release, etc. Read the button, then send the state to the PC app upon change.
 
 What follows are a couple of examples of how and why you'd want to use FirmataLite i this way, although I have yet to produce any concrete examples. All just theory at this point.
 
@@ -17,12 +17,13 @@ RELEASED 0x01
 int action
 É
 
-int[1] data;
-data[0] = PRESSED; // action
+data[2];
+data[0] = buttonInstanceID
+data[1] = PRESSED; // action
 
 // send the data to the SW application
 // params: class identifier, number of bytes to send, array
-FirmataLite.sendSysex(BUTTON, 1, data);
+FirmataLite.sendSysex(BUTTON, 2, data);
 
 In the SW application, create a ButtonBase class that implements the same interface.
 
@@ -50,14 +51,15 @@ y = accelerometer.y
 z = accelerometer.z
 gRange = accelerometer.range
 
-data[4]
-data[0] = x
-data[1] = y
-data[2] = z
-data[3] = gRange
+data[5]
+data[0] = accelerometerInstanceID
+data[1] = x
+data[2] = y
+data[3] = z
+data[4] = gRange
 
 // send the packet
-FirmataLite.sendSysex(ACCELEROMETER, 4, data);
+FirmataLite.sendSysex(ACCELEROMETER, 5, data);
 
 the SW implementation then expects an accelerometer packet and can appropriately parse the values.
 
@@ -66,10 +68,14 @@ the SW implementation then expects an accelerometer packet and can appropriately
 switch (incomingDataPacket[0]) {
  case HW.ACCELEROMETER:
 	// parse accelerometer data
-	accelInstance.x = incomingDataPacket[1]
-	accelInstance.y = incomingDataPacket[2]
-	accelInstance.z = incomingDataPacket[3]
-	accelInstance.gRange = incomingDataPacket[4]
+	if (incomingDataPacket[1] = instance1) {
+		accelInstance1.x = incomingDataPacket[2]
+		accelInstance1.y = incomingDataPacket[3]
+		accelInstance1.z = incomingDataPacket[4]
+		accelInstance1.gRange = incomingDataPacket[5]
+	} else if (incomingDataPacket[1] = instance2) {
+		// assign values
+	}	
 	break
  case HW.COMPONENT:
 	// some other component or sensor data (if you have any to implement)
